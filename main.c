@@ -48,39 +48,56 @@ int main()//需提前定义一个nm数组来存储当前解带入A矩阵后的值
         if//不满足迭代结束条件
             break
         else
-        multi2(R,Rsqu,n,m);//残差的平方 mm
+        multi2(R,Rsqu1,n,m);//残差Rk的平方 mm
         multi1(A,P,AP,n,n,m);//求得Ap
         multi1(PT,AP,PAP,m,n,m);
         inverse(PAP,PAP1);//mm
-        multi1(PAP1,Rsqu,alpha,m,m,m);//步长alpha
+        multi1(PAP1,Rsqu1,alpha,m,m,m);//步长alpha
 
         for(i=0;i<n;i++)
         {
             for(j=0;j<m;j++)
             {
+                q=0；
                 for(k=0;k<m;k++)
                 {
                     q=q+P[i][k]*alpha[k][j];
                 }
                 X[i][j]=X[i][j]+q;
             }
-        }
+        }//更新解X
 
         for(i=0;i<n;i++)
         {
             for(j=0;j<m;j++)
             {
-
+                q=0；
                 for(k=0;k<m;k++)
                 {
-                    q=q+P[i][k]*alpha[k][j];
+                    q=q+AP[i][k]*alpha[k][j];
                 }
-                X[i][j]=X[i][j]+q;
+                R[i][j]=R[i][j]-q;
             }
-        }
+        }//更新R
+        //声明一个矩阵存beta
+        inverse(Rsqu1,RsquInver);
+        multi2(R,Rsqu2,n,m);//残差Rk+1的平方 mm
+        multi1(RsquInver,Rsqu2,beta);
+        for(i=0;i<n;i++)
+        {
+            for(j=0;j<m;j++)
+            {
+                q=0；
+                for(k=0;k<m;k++)
+                {
+                    q=q+P[i][k]*beta[k][j];
+                }
+                P[i][j]=R[i][j]+q;
+            }
+        }//更新P
 
-        //步长alpha
     }
+
     // 打印输出1
 
     return 0;
